@@ -1,0 +1,565 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+КАФЕДРА ПРОГРАМНОЇ ІНЖЕНЕРІЇ
+
+
+
+
+Звіт
+з лабораторної роботи № 3 з дисципліни
+Програмування під Android
+   
+
+
+
+
+
+Виконав:                                                                                     Перевірив:
+ст. гр. ПЗПІ-23-4                        					ст. викладач кафедри ПІ
+Прядко Максим									Сокорчук Ігор Петрович
+
+
+
+
+
+
+
+
+
+Харків 2024 
+ЗАВДАННЯ
+
+Розробити калькулятор на 4 базові арифметичні операції з кнопками для введення аргументів і дій.
+Калькулятор повинен мати адаптивний користувацький інтерфейс у різних орієнтаціях екрану та на екранах різної роздільної здатності.
+ 
+ХІД РОБОТИ
+
+Створюємо новий проєкт та обираємо Empty Views Activity.
+Спочатку було створено макети для портретної та горизонтальної орієнтацій, щоб забезпечити адаптивність інтерфейсу. Для цього відкрили файл activity_main.xml. Для інтерфейсу використовувався ConstraintLayout, у якому знаходиться поле для виведення результату, а кнопки були розміщені у GridLayout. Для виведення результату було використано TextView:
+1. <TextView
+2.    android:id="@+id/tvResult"
+3.    android:layout_width="0dp"
+4.    android:layout_height="wrap_content"
+5.    android:gravity="end"
+6.    android:padding="16dp"
+7.    android:text="0"
+8.    android:textSize="32sp"
+9.    android:textColor="#000"
+10.  android:background="#EDEDED"
+11.  app:layout_constraintTop_toTopOf="parent"
+12.  app:layout_constraintStart_toStartOf="parent"
+13.  app:layout_constraintEnd_toEndOf="parent" />
+
+Текст дизайну кнопки:
+1.<Button
+2.    android:id="@+id/btnClear"
+3.    android:layout_width="0dp"
+4.    android:layout_height="0dp"
+5.    android:layout_rowWeight="1"
+6.    android:layout_columnWeight="1"
+7.    android:text="C"
+8.    android:backgroundTint="@color/black" />
+
+Повністю код портретної орієнтації можна побачити у ДОДАТКУ А.
+Аналогічно створено розмітку для ландшафтної орієнтації. 
+Повністю код ландшафтної орієнтації можна побачити у ДОДАТКУ Б.
+Переходимо до функціональної частини. Першим кроком створюємо слухача. Який відповідатиме за додавання числа до TextView.
+Далі додаємо слухач який відповідатиме за натискання операторів +, -, *, :
+1. View.OnClickListener operatorClickListener = view -> {
+2.    Button button = (Button) view;
+3.    if (!currentNumber.isEmpty()) {
+4.        firstOperand = Double.parseDouble(currentNumber);
+5.        operator = button.getText().toString();
+6.        currentNumber = ""; 
+7.    }
+8. };
+
+Структура така: коли натиснута кнопка оператора (+, -, *, /), Поточне число перетворюється в firstOperand., потім оператор зберігається у змінну operator, значення currentNumber очищається для введення другого операнду.
+Далі знаходимо елементи інтерфейсу за їх id, створюємо функцію додавання коми
+ [ДОДАТОК В].
+
+Випадок «дорівнює» має у собі підрахунки. Спочатку він перетворює рядки чисел на тип даних Float та знову починає switch-case для перевірки записаного оператора. В його залежності виконується дія в операторі. Приклад випадку додавання:
+
+Кнопка «btnClear»  cкидає всі змінні й очищує екран результату.
+1. findViewById(R.id.btnClear).setOnClickListener(view -> {
+2.    currentNumber = "";
+3.    operator = "";
+4.    firstOperand = 0;
+5.    operator = "";
+6.    tvResult.setText("0");
+7. }); 
+ВИСНОВКИ
+
+Під час лабораторної роботи було створено додаток простого калькулятора на 4 базові дії, закріплено знання з обробки подій при використанні кнопок, обчислення записаних з кнопок змінних та відображення результату на екрані.
+Відеозвіт на YouTube. URL: https://youtu.be/HDUo9xVrS4g
+
+ 
+ВИКОРИСТАНІ ДЖЕРЕЛА
+
+1.	Документація JavaRush switch-case. URL: https://javarush.com/en/groups/posts/en..switch-statement-in-java (дата звернення: 20.11.2024)
+ 
+ДОДАТОК А
+
+Файл портретної орієнтації.
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:padding="16dp"
+        android:text="0"
+        android:textSize="32sp"
+        android:textColor="#000"
+        android:background="#EDEDED"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <GridLayout
+        android:id="@+id/buttonGrid"
+        android:layout_width="388dp"
+        android:layout_height="467dp"
+        android:columnCount="4"
+        android:padding="8dp"
+        android:rowCount="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvResult"
+        app:layout_constraintVertical_bias="0.915">
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="C"
+            android:backgroundTint="@color/black" />
+
+        <Button
+            android:id="@+id/btn7"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/btn8"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/btn9"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/btnDivide"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="/" />
+
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/btn6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/btnMultiply"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="*" />
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="3" />
+
+        <Button
+            android:id="@+id/btnSubtract"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="-" />
+
+        <Button
+            android:id="@+id/btn0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/btnDot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="." />
+
+        <Button
+            android:id="@+id/btnEquals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="=" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="+" />
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+ 
+ДОДАТОК Б
+
+Файл ландшафтної розмітки
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:padding="16dp"
+        android:text="0"
+        android:textSize="36sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="16sp"
+        android:autoSizeMaxTextSize="48sp"
+        android:autoSizeStepGranularity="2sp"
+        android:textColor="#000"
+        android:background="#EDEDED"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonGrid" />
+
+    <GridLayout
+        android:id="@+id/buttonGrid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:columnCount="6"
+        android:rowCount="3"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvResult"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="C"
+            android:backgroundTint="@color/black"/>
+        <Button
+            android:id="@+id/btnDivide"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="/" />
+        <Button
+            android:id="@+id/btnMultiply"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="*" />
+        <Button
+            android:id="@+id/btnSubtract"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="-" />
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="2"
+            android:text="+" />
+        <Button
+            android:id="@+id/btnEquals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="=" />
+        <Button
+            android:id="@+id/btn7"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="7" />
+        <Button
+            android:id="@+id/btn8"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="8" />
+        <Button
+            android:id="@+id/btn9"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="9" />
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="4" />
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="5" />
+        <Button
+            android:id="@+id/btn6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="6" />
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="1" />
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="2" />
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="3" />
+        <Button
+            android:id="@+id/btn0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="0" />
+        <Button
+            android:id="@+id/btnDot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:text="." />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1" />
+    </GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+ 
+ДОДАТОК В
+
+Файл функціональної частини MainActivity
+package nure.priadko.maksym;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class MainActivity extends AppCompatActivity {
+    private TextView tvResult;
+    private String currentNumber = "";
+    private String operator = "";
+    private double firstOperand = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        tvResult = findViewById(R.id.tvResult);
+
+        View.OnClickListener numberClickListener = view -> {
+            Button button = (Button) view;
+            currentNumber += button.getText().toString();
+            tvResult.setText(currentNumber);
+        };
+
+        View.OnClickListener operatorClickListener = view -> {
+            Button button = (Button) view;
+            if (!currentNumber.isEmpty()) {
+                firstOperand = Double.parseDouble(currentNumber);
+                operator = button.getText().toString();
+                currentNumber = "";
+            }
+        };
+
+        findViewById(R.id.btn0).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn1).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn2).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn3).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn4).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn5).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn6).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn7).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn8).setOnClickListener(numberClickListener);
+        findViewById(R.id.btn9).setOnClickListener(numberClickListener);
+
+        findViewById(R.id.btnAdd).setOnClickListener(operatorClickListener);
+        findViewById(R.id.btnSubtract).setOnClickListener(operatorClickListener);
+        findViewById(R.id.btnMultiply).setOnClickListener(operatorClickListener);
+        findViewById(R.id.btnDivide).setOnClickListener(operatorClickListener);
+
+        findViewById(R.id.btnEquals).setOnClickListener(view -> {
+            if (!currentNumber.isEmpty() && !operator.isEmpty()) {
+                double secondOperand = Double.parseDouble(currentNumber);
+                double result = 0;
+
+                switch (operator) {
+                    case "+":
+                        result = firstOperand + secondOperand;
+                        break;
+                    case "-":
+                        result = firstOperand - secondOperand;
+                        break;
+                    case "*":
+                        result = firstOperand * secondOperand;
+                        break;
+                    case "/":
+                        if (secondOperand != 0) {
+                            result = firstOperand / secondOperand;
+                        } else {
+                            tvResult.setText("Error");
+                            return;
+                        }
+                        break;
+                }
+
+
+                tvResult.setText(String.valueOf(result));
+                currentNumber = String.valueOf(result);
+                operator = "";
+            }
+        });
+
+        findViewById(R.id.btnDot).setOnClickListener(view -> {
+            if (!currentNumber.contains(".")) {
+                currentNumber += ".";
+                tvResult.setText(currentNumber);
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(view -> {
+            currentNumber = "";
+            operator = "";
+            firstOperand = 0;
+            tvResult.setText("0");
+        });
+    }
+}
+
