@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PractTask2</string>
+    <string name="buttonmessage">Показати повідомлення</string>
+    <string name="image">Image</string>
+    <string name="_1">Змінити розмір</string>
+    <string name="_2">Кнопка 2</string>
+    <string name="textview">Змінити колір</string>
+    <string name="btn1">Кнопка 1</string>
+    <string name="changetext">Змінити текст</string>
+</resources>
