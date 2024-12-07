@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">LabTask4</string>
+    <string name="description">Опис</string>
+    <string name="name">Назва</string>
+    <string name="chooseImageButton">Обрати зображення</string>
+    <string name="createOrEditButton">Створити</string>
+    <string name="back">Назад</string>
+    <string name="lowImportance">Не важливо</string>
+    <string name="mediumImportance">важливо</string>
+    <string name="highImportance">Супер важливо</string>
+    <string name="notes">Нотатки</string>
+    <string name="edit">Зберети зміни</string>
+    <string name="delete">Видалити</string>
+    <string name="deleteNote">Видалити нотатку</string>
+    <string name="deleteConfirmation">Ви впевнені?</string>
+    <string name="search">Пошук</string>
+    <string name="all">Усі</string>
+    <string name="incorrectInput">Невірно введено</string>
+    <string name="noTitle">Потрібна назва</string>
+    <string name="yes">Так</string>
+    <string name="no">ні</string>
+</resources>
