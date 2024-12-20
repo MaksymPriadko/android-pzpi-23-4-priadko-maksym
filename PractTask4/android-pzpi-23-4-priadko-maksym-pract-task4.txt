@@ -1,0 +1,123 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+КАФЕДРА ПРОГРАМНОЇ ІНЖЕНЕРІЇ
+
+
+
+
+Звіт
+з практичної роботи № 4 з дисципліни
+Програмування під Android
+   
+
+
+
+
+
+Виконав:                                                                                     Перевірив:
+ст. гр. ПЗПІ-23-4                        					ст. викладач кафедри ПІ
+Прядко Максим									Сокорчук Ігор Петрович
+
+
+
+
+
+
+
+
+
+Харків 2024
+ЗАВДАННЯ
+
+1.	Ознайомитися з роботою SharedPreferences для збереження налаштувань застосунку.
+2.	Опанувати роботу з базою даних SQLite: створення, збереження та отримання даних.
+3.	Вивчити роботу з файлами для збереження даних у внутрішній або зовнішній пам'яті.
+ 
+ХІД РОБОТИ
+
+Cтворюємо новий проєкт та обираємо Empty Views Activity.
+SharedPreferences — це простий спосіб зберігати пари "ключ-значення", які зазвичай використовуються для збереження налаштувань застосунку або невеликих даних користувача. Файл налаштувань зберігається у вигляді XML у внутрішній пам'яті застосунку. 
+Реалізація роботи із SharedPreferences
+Створено методи saveToSharedPrefs() для збереження даних і loadSharedPrefs() для їх завантаження. Після збереження інформації дані автоматично завантажуються і відображаються на екрані.
+Код збереження у SharedPreferences
+1. private void saveToSharedPrefs() {
+2.    SharedPreferences.Editor editor = sharedPreferences.edit();
+3.    editor.putString("name", etName.getText().toString());
+4.    editor.putInt("age", Integer.parseInt(etAge.getText().toString()));
+5.    editor.apply();
+6.    loadSharedPrefs();
+7. }
+Код завантаження з SharedPreferences:
+1.  private void loadSharedPrefs() {
+2.     String name = sharedPreferences.getString("name", "Немає даних");
+3.     int age = sharedPreferences.getInt("age", 0);
+4.     tvResult.setText("Ім'я: " + name + ", Вік: " + age);
+5. }
+
+Робота із SQLite
+Для роботи з базою даних створено клас DBHelper, який розширює SQLiteOpenHelper. Реалізовано методи для додавання записів у таблицю users та відображення даних.
+Код збереження до SQLite:
+1.	    private void saveToSQLite() {
+2.	        SQLiteDatabase db = dbHelper.getWritableDatabase();
+3.	        ContentValues values = new ContentValues();
+4.	        values.put("name", etName.getText().toString());
+5.	        values.put("age", Integer.parseInt(etAge.getText().toString()));
+6.	
+7.	        long result = db.insert("users", null, values);
+8.	        if (result != -1) {
+9.	            Toast.makeText(this, "Користувача збережено!", Toast.LENGTH_SHORT).show();
+10.	        }
+11.	        db.close();
+12.	    } 
+
+Код відображення збережених даних:
+1.  private void displayUsers() {
+2.     SQLiteDatabase db = dbHelper.getReadableDatabase();
+3.     Cursor cursor = db.query("users", null, null, null, null, null, null);
+4.
+5.     StringBuilder data = new StringBuilder();
+6.     while (cursor.moveToNext()) {
+7.         String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+8.         int age = cursor.getInt(cursor.getColumnIndexOrThrow("age"));
+9.         data.append("Ім'я: ").append(name).append(", Вік:").append(age).append("\n");
+10.     }
+11.     tvResult.setText(data.toString());
+12.     cursor.close();
+13.     db.close();
+14. }
+
+Робота із файлами
+Для запису даних у файл використано клас FileOutputStream. Реалізовано можливість збереження тексту у файл і його читання.
+Збереження до файлу:
+1. private void writeFile() {
+2.     String text = etName.getText().toString();
+3.    try (FileOutputStream fos = openFileOutput("user_data.txt", MODE_PRIVATE)) {
+4.        fos.write(text.getBytes());
+5.        Toast.makeText(this, "Дані записано у файл", 
+6. Toast.LENGTH_SHORT).show();
+7.    } catch (IOException e) {
+8.         e.printStackTrace();
+9.      }
+10. }
+Читання з файлу:
+1. try (FileInputStream fis = openFileInput("user_data.txt")) {
+2.     int c;
+3.     StringBuilder temp = new StringBuilder();
+4.     while ((c = fis.read()) != -1) {
+5.         temp.append((char) c);
+6.     }
+7.     tvResult.setText(temp.toString());
+8. } 
+ВИСНОВКИ
+
+Під час виконання практичної роботи було створено Android-застосунок для роботи з різними методами збереження даних: SharedPreferences, SQLite та файлами. Це дозволило засвоїти основні принципи організації локального збереження даних, а також навички роботи з базами даних і файловою системою в Android.
+Відеозвіт на YouTube. URL: https://youtu.be/4GZuIwG-rhU
+
+ 
+ВИКОРИСТАНІ ДЖЕРЕЛА
+
+1.	Документація AndroidDevelopers SharedPreferences. URL: https://developer.android.com/training/data-storage/shared-preferences (дата звернення: 29.11.2024)
+2.	Документація AndroidDevelopers Save data using SQLite. URL: https://developer.android.com/training/data-storage/sqlite (дата звернення: 29.11.2024)
+3.	Документація AndroidDevelopers SQLiteDatabase. URL: https://developer.android.com/reference/android/database/sqlite/SQLiteDatabase (дата звернення: 29.11.2024)
